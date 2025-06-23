@@ -2,29 +2,32 @@ package main
 
 import "fmt"
 
-type dictionary struct {
-	words (map[string]string)
+type Dictionary struct {
+	words map[string]string
 }
 
-func (d *dictionary) add(word, description string) {
+func (d *Dictionary) Add(word, description string) {
 	d.words[word] = description
 }
-func (d *dictionary) get(word string) {
+func (d *Dictionary) Get(word string) {
 	_, ok := d.words[word]
 	if !ok {
-		fmt.Printf("Слово %s отсутствует в словаре", word)
+		fmt.Printf("Слово %s отсутствует в словаре\n", word)
 	} else {
-		fmt.Printf("Значение слова %s - %s", word, d.words[word])
+		fmt.Printf("Значение слова %s - %s\n", word, d.words[word])
 	}
 }
-func (d *dictionary) delete(word string) {
+func (d *Dictionary) Delete(word string) {
 	_, ok := d.words[word]
 	if !ok {
-		fmt.Printf("Слово %s отсутствует в словаре", word)
+		fmt.Printf("Слово %s отсутствует в словаре\n", word)
 	} else {
 		delete(d.words, word)
+		fmt.Printf("Значение слова %s удалено из словаря\n", word)
 	}
 }
-func (d *dictionary) list() {
-	fmt.Println(d.words)
+func (d *Dictionary) List() {
+	for key, dict := range d.words {
+		fmt.Printf("%s - %s\n", key, dict)
+	}
 }
