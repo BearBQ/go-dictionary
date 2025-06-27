@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	. "go-dictionary/dictionary"
+)
 
 func main() {
-	var dictionary1 Dictionary
-	dictionary1.words = make(map[string]string)
+
+	var MainDictionary Dictionary = NewDictionary()
+
 	dictionary1.words["Голова"] = "Орган для приема пищи"
 	fmt.Println(dictionary1.words)
 
