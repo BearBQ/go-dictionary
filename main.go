@@ -14,6 +14,7 @@ func main() {
 	}
 }
 
+// cycleOfProgram Функция выполнения программы
 func cycleOfProgram(d *Dictionary) error {
 
 	command, err := InputStartCommand(d)

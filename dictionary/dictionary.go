@@ -12,7 +12,7 @@ import (
 
 // Dictionary Структура основного словаря, типа map[string]string
 type Dictionary struct {
-	words map[string]string
+	Words map[string]string
 }
 
 var CommandsType = map[string]string{
@@ -25,7 +25,7 @@ var CommandsType = map[string]string{
 // NewDictionary создает словарь с уже заданными значениями
 func NewDictionary() Dictionary {
 	var newDictionary Dictionary
-	newDictionary.words = map[string]string{
+	newDictionary.Words = map[string]string{
 		"Голова": "часть тела",
 		"Рука":   "конечность",
 		"Нога":   "нижняя конечность",
@@ -41,12 +41,12 @@ func Add(incomingDictionary *Dictionary, word string, description string) error 
 	if word == "" || description == "" {
 		return errors.New("слово не может быть пустым")
 	}
-	_, ok := incomingDictionary.words[word]
+	_, ok := incomingDictionary.Words[word]
 	if ok {
 		return fmt.Errorf("слово %s присутствует в словаре", word)
 	}
 
-	incomingDictionary.words[word] = description
+	incomingDictionary.Words[word] = description
 	err := PrintStatus("Add", word, "")
 	if err != nil {
 		fmt.Errorf("Печать не удалась")
@@ -55,26 +55,27 @@ func Add(incomingDictionary *Dictionary, word string, description string) error 
 }
 
 // Get проверяет значение слова
-func Get(d *Dictionary, word string) error {
+func Get(d *Dictionary, word string) (string, string, error) {
 
-	value, ok := d.words[word]
+	value, ok := d.Words[word]
 	if !ok {
-		return fmt.Errorf("cлово %s отсутствует в словаре", word)
+		return "", "", fmt.Errorf("cлово %s отсутствует в словаре", word)
 	}
 
 	err := PrintStatus("Get", word, value)
 	if err != nil {
-		return fmt.Errorf("ошибка при выводе статуса команды %v", err)
+		return "", "", fmt.Errorf("ошибка при выводе статуса команды %v", err)
 	}
-	return nil
+	return word, value, nil
 }
 
+// Delete - удаляет значение слова
 func Delete(d *Dictionary, word string) error {
-	_, ok := d.words[word]
+	_, ok := d.Words[word]
 	if !ok {
 		return fmt.Errorf("cлово %s отсутствует в словаре", word)
 	} else {
-		delete(d.words, word)
+		delete(d.Words, word)
 		err := PrintStatus("Delete", word, "")
 		if err != nil {
 			return fmt.Errorf("ошибка вывода статуса")
@@ -85,14 +86,15 @@ func Delete(d *Dictionary, word string) error {
 }
 
 // List выводит в консоль сесь словарь
-func List(d *Dictionary) error {
-	if d == nil || len(d.words) == 0 {
-		return errors.New("в словаре отсутствуют слова")
+func List(d *Dictionary) (string, error) {
+	if d == nil || len(d.Words) == 0 {
+		return "", errors.New("в словаре отсутствуют слова")
 	}
-	for key, dict := range d.words {
-		fmt.Printf("%s - %s\n", key, dict)
+	result := ""
+	for key, dict := range d.Words {
+		result += key + " - " + dict + "\n"
 	}
-	return nil
+	return result, nil
 }
 
 // checkCommand проверяет корректность ввода команды
@@ -131,37 +133,50 @@ func DictionaryOperations(d *Dictionary, command string) error {
 	case "add":
 		word, discription, err := InputWordsforAdd()
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
 		err = Add(d, word, discription)
 		if err != nil {
 
-			return fmt.Errorf("Ошибка", err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
 	case "get":
 		word, err := InputWordForGetDelete()
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
-		err = Get(d, word)
+		key, value, err := Get(d, word)
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
+		err = PrintStatus("Get", key, value)
+		if err != nil {
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
+		}
+
 	case "delete":
 		word, err := InputWordForGetDelete()
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
 		err = Delete(d, word)
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
 	case "list":
-		err := List(d)
+		resultList, err := List(d)
 		if err != nil {
-			return fmt.Errorf("Ошибка", err)
+			fmt.Println(err)
+			return fmt.Errorf("ошибка : %v", err)
 		}
+		fmt.Println(resultList)
 	default:
+
 		return fmt.Errorf("неизвестная команда: %s", command)
 	}
 	return nil
