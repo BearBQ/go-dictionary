@@ -9,15 +9,21 @@ func main() {
 
 	var MainDictionary Dictionary = NewDictionary()
 
-	dictionary1.words["Голова"] = "Орган для приема пищи"
-	fmt.Println(dictionary1.words)
+	for {
+		cycleOfProgram((&MainDictionary))
+	}
+}
 
-	dictionary1.Add("Глаза", "Два шара")
+func cycleOfProgram(d *Dictionary) error {
 
-	dictionary1.Get("Голова")
-	dictionary1.Get("Мозг")
+	command, err := InputStartCommand(d)
+	if err != nil {
+		return fmt.Errorf("Ошибка ввода: %v\n", err)
 
-	dictionary1.List()
-	dictionary1.Delete("Глаза")
-	dictionary1.List()
+	}
+	err = DictionaryOperations(d, command)
+	if err != nil {
+		return fmt.Errorf("Ошибка ввода: %v\n", err)
+	}
+	return nil
 }
