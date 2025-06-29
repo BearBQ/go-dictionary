@@ -5,6 +5,7 @@ import (
 	"fmt"
 	. "go-dictionary/input"
 	. "go-dictionary/output"
+	"strings"
 )
 
 //Commands - список команд
@@ -15,17 +16,17 @@ type Dictionary struct {
 }
 
 var CommandsType = map[string]string{
-	"Add":    "добавить в словарь",
-	"Get":    "Найти определение слова",
-	"Delete": "Удалить слово",
-	"List":   "Вывести словарь",
+	"add":    "добавить в словарь",
+	"get":    "Найти определение слова",
+	"delete": "Удалить слово",
+	"list":   "Вывести словарь",
 }
 
 // NewDictionary создает словарь с уже заданными значениями
 func NewDictionary() Dictionary {
 	var newDictionary Dictionary
 	newDictionary.words = map[string]string{
-		"голова": "часть тела",
+		"Голова": "часть тела",
 		"Рука":   "конечность",
 		"Нога":   "нижняя конечность",
 	}
@@ -125,17 +126,19 @@ func DictionaryOperations(d *Dictionary, command string) error {
 	if d == nil {
 		return errors.New("словарь не инициализирован")
 	}
-	switch command {
-	case "Add":
+	commandToLower := strings.ToLower(command)
+	switch commandToLower {
+	case "add":
 		word, discription, err := InputWordsforAdd()
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)
 		}
 		err = Add(d, word, discription)
 		if err != nil {
+
 			return fmt.Errorf("Ошибка", err)
 		}
-	case "Get":
+	case "get":
 		word, err := InputWordForGetDelete()
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)
@@ -144,7 +147,7 @@ func DictionaryOperations(d *Dictionary, command string) error {
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)
 		}
-	case "Delete":
+	case "delete":
 		word, err := InputWordForGetDelete()
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)
@@ -153,7 +156,7 @@ func DictionaryOperations(d *Dictionary, command string) error {
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)
 		}
-	case "List":
+	case "list":
 		err := List(d)
 		if err != nil {
 			return fmt.Errorf("Ошибка", err)

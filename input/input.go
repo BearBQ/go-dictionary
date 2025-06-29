@@ -3,6 +3,7 @@ package input
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 // InputCommand получает значение команды из командной строки
@@ -10,7 +11,10 @@ func InputCommand() (string, error) {
 	var command string
 	fmt.Println("Введите команду (Add, Get, Delete, List):")
 	fmt.Fscan(os.Stdin, &command)
-	return command, nil
+
+	commandToLower := strings.ToLower(command)
+
+	return commandToLower, nil
 }
 
 // InputWordsForAdd приинмает данные слова и значения из командной строки для комманды Add
@@ -19,17 +23,12 @@ func InputWordsforAdd() (string, string, error) {
 	for {
 		fmt.Println("Введите слово")
 		fmt.Fscan(os.Stdin, &word)
-		if word == "" {
-			fmt.Println("Слово не может быть пустым")
-		} else {
-			fmt.Println("Введите слово")
-			fmt.Fscan(os.Stdin, description)
-			if word == "" {
-				fmt.Println("Слово не может быть пустым")
-			} else {
-				return word, description, nil
-			}
+		fmt.Println("Введите определение")
+		fmt.Fscan(os.Stdin, &description)
+		if word != "" && description != "" {
+			return word, description, nil
 		}
+		fmt.Println("Слово и определение не заполнены")
 	}
 }
 
@@ -38,12 +37,11 @@ func InputWordForGetDelete() (string, error) {
 	var word string
 	for {
 		fmt.Println("Введите слово")
-
 		fmt.Fscan(os.Stdin, &word)
-		if word == "" {
-			fmt.Println("Слово не может быть пустым")
-		} else {
+		if word != "" {
 			return word, nil
 		}
+		fmt.Println("Слово не может быть пустым")
+
 	}
 }

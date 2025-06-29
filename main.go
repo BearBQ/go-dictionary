@@ -18,12 +18,12 @@ func cycleOfProgram(d *Dictionary) error {
 
 	command, err := InputStartCommand(d)
 	if err != nil {
-		return fmt.Errorf("Ошибка ввода: %v\n", err)
+		return fmt.Errorf("ошибка ввода: %v\n", err)
 
 	}
 	err = DictionaryOperations(d, command)
 	if err != nil {
-		return fmt.Errorf("Ошибка ввода: %v\n", err)
+		return fmt.Errorf("ошибка ввода: %v\n", err)
 	}
 	return nil
 }
