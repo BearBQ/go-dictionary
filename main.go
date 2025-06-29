@@ -1,19 +1,30 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	. "go-dictionary/dictionary"
+)
 
 func main() {
-	var dictionary1 Dictionary
-	dictionary1.words = make(map[string]string)
-	dictionary1.words["Голова"] = "Орган для приема пищи"
-	fmt.Println(dictionary1.words)
 
-	dictionary1.Add("Глаза", "Два шара")
+	var MainDictionary Dictionary = NewDictionary()
 
-	dictionary1.Get("Голова")
-	dictionary1.Get("Мозг")
+	for {
+		cycleOfProgram((&MainDictionary))
+	}
+}
 
-	dictionary1.List()
-	dictionary1.Delete("Глаза")
-	dictionary1.List()
+// cycleOfProgram Функция выполнения программы
+func cycleOfProgram(d *Dictionary) error {
+
+	command, err := InputStartCommand(d)
+	if err != nil {
+		return fmt.Errorf("ошибка ввода: %v\n", err)
+
+	}
+	err = DictionaryOperations(d, command)
+	if err != nil {
+		return fmt.Errorf("ошибка ввода: %v\n", err)
+	}
+	return nil
 }
